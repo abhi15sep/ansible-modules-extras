@@ -196,6 +196,14 @@ def main():
     if module.params['state'] == 'present':
         if 'containers' not in module.params or not module.params['containers']:
             module.fail_json(msg="To use task definitions, a list of containers must be specified")
+        else: 
+            for container in module.params['containers']:
+                if not "cpu" in container or container['cpu'] is None:
+                    module.fail_json(msg="To use containers, cpu must be specified")
+                if not "memory" or container['memory'] is None:
+                    module.fail_json(msg="To use containers, memory must be specified")
+                container['cpu'] = int(container['cpu'])
+                container['memory'] = int(container['memory'])
 
         if 'family' not in module.params or not module.params['family']:
             module.fail_json(msg="To use task definitions, a family must be specified")
